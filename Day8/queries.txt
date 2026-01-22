@@ -1,0 +1,162 @@
+--------------------------SQL CRUD Operations (Hands-On)--------------------------------------
+
+## Step 1: Create a Table
+
+- SQL QUERY: 
+
+CREATE TABLE students (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  age INTEGER,
+  course TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+- OUTPUT : CREATE TABLE
+-----------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+
+
+## Step 2: Insert Data (5–10 Records Required)
+
+- SQL QUERY:
+
+INSERT INTO students (name, email, age, course)
+VALUES
+('Rahul', 'rahul@gmail.com', 21, 'Web Development'),
+('Amit', 'amit@gmail.com', 19, 'Data Science'),
+('Neha', 'neha@gmail.com', 22, 'Backend'),
+('Pooja', 'pooja@gmail.com', 20, 'UI Design'),
+('Ravi', 'ravi@gmail.com', 23, 'Web Development');
+
+- OUTPUT:  Success. No rows returned
+-----------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+
+
+## Step 3: Read Data
+
+1.Fetch all students
+
+- SQL QUERY:
+        SELECT * FROM students;
+
+- OUTPUT: 
+| id | name  | email           | age | course          | created_at                 |
+| -- | ----- | --------------- | --- | --------------- | -------------------------- |
+| 1  | Rahul | rahul@gmail.com | 21  | Web Development | 2026-01-22 13:40:38.847818 |
+| 2  | Amit  | amit@gmail.com  | 19  | Data Science    | 2026-01-22 13:40:38.847818 |
+| 3  | Neha  | neha@gmail.com  | 22  | Backend         | 2026-01-22 13:40:38.847818 |
+| 4  | Pooja | pooja@gmail.com | 20  | UI Design       | 2026-01-22 13:40:38.847818 |
+| 5  | Ravi  | ravi@gmail.com  | 23  | Web Development | 2026-01-22 13:40:38.847818 |
+______________________________________________________________________________________________________________
+
+2.Fetch students older than 20
+
+- SQL QUERY:
+SELECT * FROM students
+WHERE age > 20;
+
+- OUTPUT :
+
+| id | name  | email           | age | course          | created_at                 |
+| -- | ----- | --------------- | --- | --------------- | -------------------------- |
+| 1  | Rahul | rahul@gmail.com | 21  | Web Development | 2026-01-22 13:40:38.847818 |
+| 3  | Neha  | neha@gmail.com  | 22  | Backend         | 2026-01-22 13:40:38.847818 |
+| 5  | Ravi  | ravi@gmail.com  | 23  | Web Development | 2026-01-22 13:40:38.847818 |
+______________________________________________________________________________________________________________
+
+3.Fetch only name and email columns
+
+- SQL QUERY:
+SELECT name, email FROM students;
+
+- OUTPUT :
+
+| name  | email           |
+| ----- | --------------- |
+| Rahul | rahul@gmail.com |
+| Amit  | amit@gmail.com  |
+| Neha  | neha@gmail.com  |
+| Pooja | pooja@gmail.com |
+| Ravi  | ravi@gmail.com  |
+______________________________________________________________________________________________________________
+
+4.Fetch students enrolled in a specific course
+
+- SQL QUERY:
+SELECT * FROM students
+WHERE course = 'Web Development';
+
+- OUTPUT:
+| id | name  | email           | age | course          | created_at                 |
+| -- | ----- | --------------- | --- | --------------- | -------------------------- |
+| 1  | Rahul | rahul@gmail.com | 21  | Web Development | 2026-01-22 13:40:38.847818 |
+| 5  | Ravi  | ravi@gmail.com  | 23  | Web Development | 2026-01-22 13:40:38.847818 |
+______________________________________________________________________________________________________________
+-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+
+## Step 4: Update Data
+
+
+1.Update the age of one student
+
+- SQL QUERY:
+UPDATE students
+SET age = 24
+WHERE email = 'rahul@gmail.com';
+
+- OUTPUT:
+Success. No rows returned
+______________________________________________________________________________________________________________
+
+2.Update the course for all students enrolled in one course
+
+- SQL QUERY:
+UPDATE students
+SET course = 'Advanced Data Science'
+WHERE course = 'Data Science';
+
+- OUTPUT:
+Success. No rows returned
+______________________________________________________________________________________________________________
+-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+
+## Step 5: Delete Data
+
+1.Delete one student using id
+
+- SQL QUERY:
+
+DELETE FROM students
+WHERE id = 2;
+
+- OUTPUT:
+Success. No rows returned
+______________________________________________________________________________________________________________
+
+2.Delete all students below a certain age 
+
+- SQL QUERY:
+DELETE FROM students
+WHERE age < 20;
+
+- OUTPUT:
+Success. No rows returned
+______________________________________________________________________________________________________________
+ 
+ FINAL TABLE:
+
+| id | name  | email           | age | course          | created_at                 |
+| -- | ----- | --------------- | --- | --------------- | -------------------------- |
+| 3  | Neha  | neha@gmail.com  | 22  | Backend         | 2026-01-22 13:40:38.847818 |
+| 4  | Pooja | pooja@gmail.com | 20  | UI Design       | 2026-01-22 13:40:38.847818 |
+| 5  | Ravi  | ravi@gmail.com  | 23  | Web Development | 2026-01-22 13:40:38.847818 |
+| 1  | Rahul | rahul@gmail.com | 24  | Web Development | 2026-01-22 13:40:38.847818 |
+
+______________________________________________________________________________________________________________
+-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
