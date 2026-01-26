@@ -1,0 +1,290 @@
+---------------------------------SQL CRUD Operations on Relationships----------------------------
+_____________________________________________________________________________________________________
+
+## Step 1: Create Tables with Relationships
+---------------------------------------------
+
+Table 1: users
+
+-SQL QUERY:
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+Table 2: orders
+
+-SQL QUERY:
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    amount INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE RESTRICT
+);
+
+
+- OUTPUT:
+Success. No rows returned
+
+-----------------------------------------------------------------------------------------------------
+_____________________________________________________________________________________________________
+
+
+## Step 2: Insert Data
+--------------------------
+
+1.INSERT USERS
+
+-SQL QUERY:
+
+INSERT INTO users (name, email) VALUES
+('Amit Sharma', 'amit@gmail.com'),
+('Neha Verma', 'neha@gmail.com'),
+('Rahul Singh', 'rahul@gmail.com'),
+('Pooja Mehta', 'pooja@gmail.com'),
+('Karan Patel', 'karan@gmail.com');
+
+2.INSERT orders
+
+-SQL QUERY:
+
+INSERT INTO orders (user_id, amount, status) VALUES
+(1, 1200, 'PLACED'),
+(1, 800, 'DELIVERED'),
+(1, 500, 'CANCELLED'),
+(2, 1500, 'PLACED'),
+(2, 2200, 'DELIVERED'),
+(3, 999, 'PLACED'),
+(4, 3000, 'DELIVERED'),
+(4, 450, 'PLACED'),
+(5, 700, 'PLACED');
+
+
+-OUTPUT:
+Success. No rows returned
+
+-----------------------------------------------------------------------------------------------------
+_____________________________________________________________________________________________________
+
+## Step 3: Read Data (Relational Reads)
+_____________________________________________________________________________________________________
+
+1. fetch all users 
+-SQL QUERY:
+SELECT * FROM users;
+
+-OUTPUT:
+
+| id | name        | email           | created_at               |
+| -- | ----------- | --------------- | ------------------------ |
+| 1  | Amit Sharma | amit@gmail.com  | 2026-01-26 16:03:09.1212 |
+| 2  | Neha Verma  | neha@gmail.com  | 2026-01-26 16:03:09.1212 |
+| 3  | Rahul Singh | rahul@gmail.com | 2026-01-26 16:03:09.1212 |
+| 4  | Pooja Mehta | pooja@gmail.com | 2026-01-26 16:03:09.1212 |
+| 5  | Karan Patel | karan@gmail.com | 2026-01-26 16:03:09.1212 |
+_____________________________________________________________________________________________________
+
+2.Fetch all orders
+
+-SQL QUERY:
+SELECT * FROM orders;
+
+-OUTPUT:
+
+| id | user_id | amount | status    | created_at               |
+| -- | ------- | ------ | --------- | ------------------------ |
+| 1  | 1       | 1200   | PLACED    | 2026-01-26 16:03:09.1212 |
+| 2  | 1       | 800    | DELIVERED | 2026-01-26 16:03:09.1212 |
+| 3  | 1       | 500    | CANCELLED | 2026-01-26 16:03:09.1212 |
+| 4  | 2       | 1500   | PLACED    | 2026-01-26 16:03:09.1212 |
+| 5  | 2       | 2200   | DELIVERED | 2026-01-26 16:03:09.1212 |
+| 6  | 3       | 999    | PLACED    | 2026-01-26 16:03:09.1212 |
+| 7  | 4       | 3000   | DELIVERED | 2026-01-26 16:03:09.1212 |
+| 8  | 4       | 450    | PLACED    | 2026-01-26 16:03:09.1212 |
+| 9  | 5       | 700    | PLACED    | 2026-01-26 16:03:09.1212 |
+_____________________________________________________________________________________________________
+
+3.Fetch all orders for a specific user(ID=1)
+
+-SQL QUERY:
+SELECT *
+FROM orders
+WHERE user_id = 1;
+
+
+-OUTPUT:
+
+| id | user_id | amount | status    | created_at               |
+| -- | ------- | ------ | --------- | ------------------------ |
+| 1  | 1       | 1200   | PLACED    | 2026-01-26 16:03:09.1212 |
+| 2  | 1       | 800    | DELIVERED | 2026-01-26 16:03:09.1212 |
+| 3  | 1       | 500    | CANCELLED | 2026-01-26 16:03:09.1212 |
+______________________________________________________________________________
+
+4.Fetch users who have more than one order
+
+-SQL QUERY:
+
+SELECT u.id, u.name, COUNT(o.id) AS total_orders
+FROM users u
+JOIN orders o ON u.id = o.user_id
+GROUP BY u.id, u.name
+HAVING COUNT(o.id) > 1;
+
+-OUTPUT:
+
+| id | name        | total_orders |
+| -- | ----------- | ------------ |
+| 4  | Pooja Mehta | 2            |
+| 2  | Neha Verma  | 2            |
+| 1  | Amit Sharma | 3            |
+___________________________________________________________________________
+
+5.Fetch total order amount per user
+
+-SQL QUERY
+
+SELECT u.id, u.name, SUM(o.amount) AS total_amount
+FROM users u
+JOIN orders o ON u.id = o.user_id
+GROUP BY u.id, u.name;
+
+-OUTPUT:
+
+| id | name        | total_amount |
+| -- | ----------- | ------------ |
+| 4  | Pooja Mehta | 3450         |
+| 2  | Neha Verma  | 3700         |
+| 3  | Rahul Singh | 999          |
+| 5  | Karan Patel | 700          |
+| 1  | Amit Sharma | 2500
+
+-----------------------------------------------------------------------------------------------------
+_____________________________________________________________________________________________________
+         |
+
+## Step 4: Update Data
+
+1.Update the email of one user
+
+-SQL QUERY:
+
+UPDATE users
+SET email = 'amit.sharma@gmail.com'
+WHERE id = 1;
+
+-OUTPUT:
+Success. No rows returned
+
+2.Update the status of all orders for a specific user(ID=2)
+
+-SQL QUERY:
+UPDATE orders
+SET status = 'DELIVERED'
+WHERE user_id = 2;
+
+-OUTPUT:
+Success. No rows returned
+
+
+3.Update order amount for a single order (order_id = 5)
+
+-SQL QUERY:
+
+UPDATE orders
+SET amount = 1100
+WHERE id = 5;
+
+-OUTPUT:
+
+Success. No rows returned
+
+-----------------------------------------------------------------------------------------------------
+_____________________________________________________________________________________________________
+
+## Step 5: Delete Data
+
+1.Delete one order using order id
+
+-SQL QUERY
+
+DELETE FROM orders
+WHERE id = 3;
+
+-OUTPUT:
+Success. No rows returned
+
+2. Delete all orders of a specific user (user_id = 7)
+
+-SQL QUERY:
+
+DELETE FROM orders
+WHERE user_id = 7;
+
+-OUTPUT:
+
+Success. No rows returned
+
+3.Attempt deleting a user with existing orders
+
+-SQL QUERY:
+
+DELETE FROM users
+WHERE id = 9;
+
+-OUTPUT:
+Success. No rows returned
+
+-----------------------------------------------------------------------------------------------------
+_____________________________________________________________________________________________________
+
+## Step 6: Conceptual Question (Short Answer)
+
+QUS-Why should orders not be stored inside the users table?
+
+--because multiple orders can be placed by a single user.
+--Database normalization would be violated if orders were stored inside of users. This would result in data duplication and complicated queries.
+-- and compromise maintainability and scalability.
+-- Clean design and data integrity are ensured by distinct tables with relationships.
+
+-----------------------------------------------------------------------------------------------------
+_____________________________________________________________________________________________________
+
+
+
+------------FINAL TABLE(USERS)--------------
+
+| id | name        | email                 | created_at               |
+| -- | ----------- | --------------------- | ------------------------ |
+| 1  | Amit Sharma | amit.sharma@gmail.com | 2026-01-26 16:03:09.1212 |
+| 2  | Neha Verma  | neha@gmail.com        | 2026-01-26 16:03:09.1212 |
+| 3  | Rahul Singh | rahul@gmail.com       | 2026-01-26 16:03:09.1212 |
+| 4  | Pooja Mehta | pooja@gmail.com       | 2026-01-26 16:03:09.1212 |
+| 5  | Karan Patel | karan@gmail.com       | 2026-01-26 16:03:09.1212 |
+
+_________________________________________________________________________________
+
+------------FINAL TABLE(ORDERS)--------------
+
+
+| id | user_id | amount | status    | created_at               |
+| -- | ------- | ------ | --------- | ------------------------ |
+| 1  | 1       | 1200   | PLACED    | 2026-01-26 16:03:09.1212 |
+| 3  | 1       | 500    | CANCELLED | 2026-01-26 16:03:09.1212 |
+| 4  | 2       | 1500   | DELIVERED | 2026-01-26 16:03:09.1212 |
+| 5  | 2       | 1100   | DELIVERED | 2026-01-26 16:03:09.1212 |
+| 6  | 3       | 999    | PLACED    | 2026-01-26 16:03:09.1212 |
+| 7  | 4       | 3000   | DELIVERED | 2026-01-26 16:03:09.1212 |
+| 8  | 4       | 450    | PLACED    | 2026-01-26 16:03:09.1212 |
+| 9  | 5       | 700    | PLACED    | 2026-01-26 16:03:09.1212 |
+______________________________________________________________________________________________________________
+______________________________________________________________________________________________________________
